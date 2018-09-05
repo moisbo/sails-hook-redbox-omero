@@ -15,6 +15,7 @@ import { LinkModalWorkspaceField, LinkModalWorkspaceComponent } from './componen
 import { CreateWorkspaceField, CreateWorkspaceComponent } from './components/create-workspace.component';
 
 import { WorkspaceUser } from './components/shared';
+import {DetailWorkspaceField, DetailWorkspaceComponent} from "./components/detail-workspace.component";
 // STEST-22
 declare var jQuery: any;
 
@@ -100,6 +101,8 @@ export class OMEROFormComponent extends LoadableComponent {
   loggedIn: any;
   rdmp: string;
   workspaceUser: WorkspaceUser;
+  workspace: string;
+  action: string;
 
   constructor(
     elm: ElementRef,
@@ -114,11 +117,12 @@ export class OMEROFormComponent extends LoadableComponent {
     this.editMode = elm.nativeElement.getAttribute('editMode') == "true";
     this.recordType = elm.nativeElement.getAttribute('recordType');
     this.rdmp = elm.nativeElement.getAttribute('rdmp');
+    this.action = elm.nativeElement.getAttribute('action');
 
     //TODO: Find out what is this next line!
     this.fieldMap = {_rootComp: this};
 
-    //TODO: do I have to wait for gitlabservice too?
+    //TODO: do I have to wait for omeroservice too?
     // this.initSubs = OMEROService.waitForInit((initStat:boolean) => {
     //   this.initSubs.unsubscribe();
     //   this.loadForm();
@@ -139,7 +143,8 @@ export class OMEROFormComponent extends LoadableComponent {
       'ListWorkspaceDataField': { 'meta': ListWorkspaceDataField, 'comp': ListWorkspaceDataComponent },
       'LoginWorkspaceAppField': { 'meta': LoginWorkspaceAppField, 'comp': LoginWorkspaceAppComponent },
       'LinkModalWorkspaceField': { 'meta': LinkModalWorkspaceField, 'comp': LinkModalWorkspaceComponent },
-      'CreateWorkspaceField': { 'meta': CreateWorkspaceField, 'comp': CreateWorkspaceComponent }
+      'CreateWorkspaceField': { 'meta': CreateWorkspaceField, 'comp': CreateWorkspaceComponent },
+      'DetailWorkspaceField': { 'meta': DetailWorkspaceField, 'comp': DetailWorkspaceComponent }
     });
 
     this.RecordsService.getForm(this.oid, this.recordType, this.editMode).then((obs:any) => {
@@ -149,6 +154,9 @@ export class OMEROFormComponent extends LoadableComponent {
           this.cssClasses = this.formDef.editCssClasses;
         } else {
           this.cssClasses = this.formDef.viewCssClasses;
+        }
+        if(this.action) {
+          console.log(this.action);
         }
         this.loggedIn = false;
         if (form.fieldsMeta) {

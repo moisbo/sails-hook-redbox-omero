@@ -13,20 +13,22 @@ import { ListWorkspaceDataComponent } from './components/list-workspaces.compone
 import { LinkModalWorkspaceComponent } from './components/linkmodal-workspace.component';
 import { CreateWorkspaceComponent } from './components/create-workspace.component';
 
+import { DetailWorkspaceComponent } from './components/detail-workspace.component';
+
 @NgModule({
   imports: [ BrowserModule, HttpModule, ReactiveFormsModule,
     SharedModule, FormsModule, PaginationModule.forRoot()
   ],
   declarations: [ OMEROFormComponent,
     ListWorkspaceDataComponent, LoginWorkspaceAppComponent,
-    LinkModalWorkspaceComponent, CreateWorkspaceComponent
+    LinkModalWorkspaceComponent, CreateWorkspaceComponent, DetailWorkspaceComponent
   ],
   exports: [  ],
   providers: [ OMEROService ],
   bootstrap: [ OMEROFormComponent ],
   entryComponents: [ LoginWorkspaceAppComponent,
   ListWorkspaceDataComponent, LinkModalWorkspaceComponent,
-  CreateWorkspaceComponent
+  CreateWorkspaceComponent, DetailWorkspaceComponent
  ]
 })
 export class OMEROModule { }
