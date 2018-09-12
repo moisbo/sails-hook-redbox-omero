@@ -4,6 +4,7 @@ module.exports.workspacetype = {
     label: 'OMERO',
     subtitle: 'OMERO',
     description: 'Create or link OMERO workspace:',
-    logo: '/angular/omero/assets/images/omero.png'
+    logo: '/angular/omero/assets/images/omero.png',
+    action: {default: 'list', available: ['create', 'list']}
   }
 };

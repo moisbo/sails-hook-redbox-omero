@@ -21,6 +21,7 @@ export module Controllers {
 
     protected _exportedMethods: any = [
       'login',
+      'canLogin',
       'projects',
       'create',
       'link',
@@ -84,6 +85,37 @@ export module Controllers {
             sails.log.error(errorMessage);
             sails.log.error(this.config.host + ' => ' + this.config.domain);
             this.ajaxFail(req, res, errorMessage, {status: false, message: errorMessage});
+          });
+      }
+    }
+
+    canLogin(req, res) {
+      this.config.set();
+      if (!req.isAuthenticated()) {
+        this.ajaxFail(req, res, `User not authenticated`);
+      } else {
+        // Needs to check whether the user can login or not. There is no mechanism other than trying to get projects.
+        const userId = req.user.id;
+        const limit = req.param('limit') || 1;
+        const offset = req.param('offset') || 0;
+        return WorkspaceService.workspaceAppFromUserId(userId, this.config.appName)
+          .flatMap(response => {
+            sails.log.debug('userInfo');
+            if (response.info) {
+              const app = response.info;
+              return OMEROService.projects(this.config, app.csrf, app.sessionid, app.sessionUuid, limit, offset, app.userId);
+            } else {
+              throw new Error('Missing application credentials');
+            }
+          })
+          .subscribe(response => {
+            sails.log.debug('can Login');
+            const data = {status: true};
+            this.ajaxOk(req, res, null, data);
+          }, error => {
+            const errorMessage = `Cannot Login`;
+            sails.log.debug(errorMessage);
+            this.ajaxFail(req, res, errorMessage, error);
           });
       }
     }

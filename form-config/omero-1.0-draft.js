@@ -39,13 +39,13 @@ module.exports = {
     {
       class: 'ListWorkspaceDataField',
       showHeader: true,
+      defaultAction: true,
       definition: {
         name: 'ListWorkspaces',
         columns: [
           {'label': 'Name', 'property': 'Name'},
           {'label': 'Description', 'property': 'Description'},
-          {'label': 'Location', 'property': '@id', 'link': 'true',
-            'classes': 'btn btn-primary', 'label': 'Open'}
+          {'label': 'Open', 'property': '@id', 'link': 'true', 'classes': 'btn btn-primary'}
         ],
         rdmpLinkLabel: 'Plan',
         syncLabel: 'Sync',
@@ -61,6 +61,16 @@ module.exports = {
         //     }]
         //   }
         // },
+      }
+    },
+    {
+      class: 'DetailWorkspaceField',
+      showHeader: true,
+      action: 'detail',
+      definition: {
+        name: 'Workspace',
+        selectLabel: 'Select files to action',
+        actions: [{name: 'download', label: 'Download'}]
       }
     },
     {

@@ -21,6 +21,7 @@ var Controllers;
             var _this = _super.call(this) || this;
             _this._exportedMethods = [
                 'login',
+                'canLogin',
                 'projects',
                 'create',
                 'link',
@@ -84,6 +85,38 @@ var Controllers;
                 });
             }
         };
+        OMEROController.prototype.canLogin = function (req, res) {
+            var _this = this;
+            this.config.set();
+            if (!req.isAuthenticated()) {
+                this.ajaxFail(req, res, "User not authenticated");
+            }
+            else {
+                var userId = req.user.id;
+                var limit_1 = req.param('limit') || 1;
+                var offset_1 = req.param('offset') || 0;
+                return WorkspaceService.workspaceAppFromUserId(userId, this.config.appName)
+                    .flatMap(function (response) {
+                    sails.log.debug('userInfo');
+                    if (response.info) {
+                        var app = response.info;
+                        return OMEROService.projects(_this.config, app.csrf, app.sessionid, app.sessionUuid, limit_1, offset_1, app.userId);
+                    }
+                    else {
+                        throw new Error('Missing application credentials');
+                    }
+                })
+                    .subscribe(function (response) {
+                    sails.log.debug('can Login');
+                    var data = { status: true };
+                    _this.ajaxOk(req, res, null, data);
+                }, function (error) {
+                    var errorMessage = "Cannot Login";
+                    sails.log.debug(errorMessage);
+                    _this.ajaxFail(req, res, errorMessage, error);
+                });
+            }
+        };
         OMEROController.prototype.projects = function (req, res) {
             var _this = this;
             this.config.set();
@@ -92,14 +125,14 @@ var Controllers;
             }
             else {
                 var userId = req.user.id;
-                var limit_1 = req.param('limit') || 10;
-                var offset_1 = req.param('offset') || 0;
+                var limit_2 = req.param('limit') || 10;
+                var offset_2 = req.param('offset') || 0;
                 return WorkspaceService.workspaceAppFromUserId(userId, this.config.appName)
                     .flatMap(function (response) {
                     sails.log.debug('userInfo');
                     if (response.info) {
                         var app = response.info;
-                        return OMEROService.projects(_this.config, app.csrf, app.sessionid, app.sessionUuid, limit_1, offset_1, app.userId);
+                        return OMEROService.projects(_this.config, app.csrf, app.sessionid, app.sessionUuid, limit_2, offset_2, app.userId);
                     }
                     else {
                         throw new Error('Missing application credentials');
@@ -337,8 +370,8 @@ var Controllers;
             }
             else {
                 var userId_2 = req.user.id;
-                var offset_2 = 10;
-                var limit_2 = 10;
+                var offset_3 = 10;
+                var limit_3 = 10;
                 var normalize_1 = 'false';
                 var app_2 = {};
                 return WorkspaceService.workspaceAppFromUserId(userId_2, this.config.appName)
@@ -347,7 +380,7 @@ var Controllers;
                     if (response.info) {
                         var app_3 = response.info;
                         return OMEROService.images({
-                            config: _this.config, app: app_3, offset: offset_2, limit: limit_2,
+                            config: _this.config, app: app_3, offset: offset_3, limit: limit_3,
                             owner: app_3.userId, group: app_3.ownerId, normalize: normalize_1
                         });
                     }
