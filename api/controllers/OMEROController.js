@@ -26,7 +26,8 @@ var Controllers;
                 'create',
                 'link',
                 'checkLink',
-                'images'
+                'images',
+                'datasets'
             ];
             _this.config = new Config();
             return _this;
@@ -391,6 +392,42 @@ var Controllers;
                     _this.ajaxOk(req, res, null, { status: true, response: response });
                 }, function (error) {
                     var errorMessage = "Failed to get images of user: " + userId_2;
+                    sails.log.error(errorMessage);
+                    _this.ajaxFail(req, res, errorMessage, error);
+                });
+            }
+        };
+        OMEROController.prototype.datasets = function (req, res) {
+            var _this = this;
+            this.config.set();
+            if (!req.isAuthenticated()) {
+                this.ajaxFail(req, res, "User not authenticated");
+            }
+            else {
+                this.config.brandingAndPortalUrl = BrandingService.getFullPath(req);
+                var userId_3 = req.user.id;
+                var offset_4 = 10;
+                var limit_4 = 10;
+                var app_4 = {};
+                var rdmpId = req.param('rdmpId');
+                var omeroId_2 = req.param('omeroId');
+                return WorkspaceService.workspaceAppFromUserId(userId_3, this.config.appName)
+                    .flatMap(function (response) {
+                    app_4 = response.info;
+                    if (response.info) {
+                        var app_5 = response.info;
+                        return OMEROService.datasets({
+                            config: _this.config, app: app_5, omeroId: omeroId_2, offset: offset_4, limit: limit_4,
+                            owner: app_5.userId, group: app_5.ownerId
+                        });
+                    }
+                    else {
+                        throw new Error('Missing application credentials');
+                    }
+                }).subscribe(function (response) {
+                    _this.ajaxOk(req, res, null, { status: true, response: response });
+                }, function (error) {
+                    var errorMessage = "Failed to get images of user: " + userId_3;
                     sails.log.error(errorMessage);
                     _this.ajaxFail(req, res, errorMessage, error);
                 });

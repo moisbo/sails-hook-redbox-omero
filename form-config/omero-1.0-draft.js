@@ -23,6 +23,7 @@ module.exports = {
       compClass: 'TextBlockComponent',
       viewOnly: false,
       definition: {
+        action: 'general',
         value: 'OMERO',
         type: 'h2'
       }
@@ -32,6 +33,7 @@ module.exports = {
       compClass: 'TextBlockComponent',
       viewOnly: false,
       definition: {
+        action: 'general',
         value: 'Workspaces',
         type: 'h3'
       }
@@ -42,6 +44,7 @@ module.exports = {
       defaultAction: true,
       definition: {
         name: 'ListWorkspaces',
+        action: 'list',
         columns: [
           {'label': 'Name', 'property': 'Name'},
           {'label': 'Description', 'property': 'Description'},
@@ -66,9 +69,9 @@ module.exports = {
     {
       class: 'DetailWorkspaceField',
       showHeader: true,
-      action: 'detail',
       definition: {
         name: 'Workspace',
+        action: 'detail',
         selectLabel: 'Select files to action',
         actions: [{name: 'download', label: 'Download'}]
       }
@@ -78,6 +81,7 @@ module.exports = {
       showHeader: true,
       definition: {
         name: 'LinkModal',
+        action: 'list',
         workspaceDefinition: [
           {label: 'Name', name: 'Name'},
           {label: 'Description', name: 'Description'}
@@ -108,6 +112,7 @@ module.exports = {
       showHeader: true,
       definition: {
         name: 'CreateWorkspace',
+        action: 'list',
         recordMap: [
           {record: 'title', ele: 'name'},
           {record: 'omeroId', ele: 'id'},
@@ -137,6 +142,7 @@ module.exports = {
       class: 'LoginWorkspaceAppField',
       showHeader: true,
       definition: {
+        action: 'general',
         name: 'LoginWorkspaceApp',
         usernameLabel: 'username',
         passwordLabel: 'password',
@@ -157,6 +163,7 @@ module.exports = {
       viewOnly: false,
       definition: {
         name: "BackToPlan",
+        action: 'list',
         label: 'Back to your Plan',
         value: '/@branding/@portal/record/edit/',
         cssClasses: 'btn btn-large btn-info',

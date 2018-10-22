@@ -8541,32 +8541,26 @@ var ListWorkspaceDataField = /** @class */ (function (_super) {
         this.loading = true;
         this.workspaces = [];
         // check the action from the rootComp if no action list workspaces
-        if (this.fieldMap._rootComp.action !== 'false') {
-            console.log(this.fieldMap._rootComp.oid);
-            console.log('will run action ' + this.fieldMap._rootComp.action);
-        }
-        else {
-            return this.omeroService.projects(this.limit, this.offset)
-                .then(function (response) {
-                _this.loading = false;
-                if (!response.status) {
-                    _this.loggedIn = _this.fieldMap._rootComp.loggedIn = false;
-                    _this.checkLoggedIn.emit(false);
-                }
-                else {
-                    _this.loggedIn = _this.fieldMap._rootComp.loggedIn = true;
-                    _this.workspacesMeta = response.projects.meta;
-                    _this.workspaces = response.projects.data;
-                    _this.checkLoggedIn.emit(true);
-                    _this.checkLinks();
-                }
-            })
-                .catch(function (error) {
-                _this.loading = false;
+        return this.omeroService.projects(this.limit, this.offset)
+            .then(function (response) {
+            _this.loading = false;
+            if (!response.status) {
                 _this.loggedIn = _this.fieldMap._rootComp.loggedIn = false;
                 _this.checkLoggedIn.emit(false);
-            });
-        }
+            }
+            else {
+                _this.loggedIn = _this.fieldMap._rootComp.loggedIn = true;
+                _this.workspacesMeta = response.projects.meta;
+                _this.workspaces = response.projects.data;
+                _this.checkLoggedIn.emit(true);
+                _this.checkLinks();
+            }
+        })
+            .catch(function (error) {
+            _this.loading = false;
+            _this.loggedIn = _this.fieldMap._rootComp.loggedIn = false;
+            _this.checkLoggedIn.emit(false);
+        });
     };
     ListWorkspaceDataField.prototype.linkWorkspace = function (item) {
         this.linkModal.emit({ rdmp: this.fieldMap._rootComp.rdmp, workspace: item });
@@ -9021,7 +9015,17 @@ var OMEROFormComponent = /** @class */ (function (_super) {
                 }
                 _this.loggedIn = false;
                 if (form.fieldsMeta) {
-                    _this.fields = form.fieldsMeta;
+                    // Only load forms with specific actions
+                    if (_this.action !== 'false') {
+                        _this.fields = form.fieldsMeta.filter(function (field) {
+                            return field.options.action === _this.action || field.options.action === 'general';
+                        });
+                    }
+                    else {
+                        _this.fields = form.fieldsMeta.filter(function (field) {
+                            return field.options.action === 'general';
+                        });
+                    }
                     _this.rebuildForm();
                     _this.watchForChanges();
                     _this.registerEvents();

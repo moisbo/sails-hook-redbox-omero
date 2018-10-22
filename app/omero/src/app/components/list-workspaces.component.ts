@@ -116,30 +116,25 @@ export class ListWorkspaceDataField extends FieldBase<any> {
     this.loading = true;
     this.workspaces = [];
     // check the action from the rootComp if no action list workspaces
-    if (this.fieldMap._rootComp.action !== 'false') {
-      console.log(this.fieldMap._rootComp.oid);
-      console.log('will run action ' + this.fieldMap._rootComp.action);
-    } else {
-      return this.omeroService.projects(this.limit, this.offset)
-        .then(response => {
-          this.loading = false;
-          if (!response.status) {
-            this.loggedIn = this.fieldMap._rootComp.loggedIn = false;
-            this.checkLoggedIn.emit(false);
-          } else {
-            this.loggedIn = this.fieldMap._rootComp.loggedIn = true;
-            this.workspacesMeta = response.projects.meta;
-            this.workspaces = response.projects.data;
-            this.checkLoggedIn.emit(true);
-            this.checkLinks();
-          }
-        })
-        .catch(error => {
-          this.loading = false;
+    return this.omeroService.projects(this.limit, this.offset)
+      .then(response => {
+        this.loading = false;
+        if (!response.status) {
           this.loggedIn = this.fieldMap._rootComp.loggedIn = false;
           this.checkLoggedIn.emit(false);
-        });
-    }
+        } else {
+          this.loggedIn = this.fieldMap._rootComp.loggedIn = true;
+          this.workspacesMeta = response.projects.meta;
+          this.workspaces = response.projects.data;
+          this.checkLoggedIn.emit(true);
+          this.checkLinks();
+        }
+      })
+      .catch(error => {
+        this.loading = false;
+        this.loggedIn = this.fieldMap._rootComp.loggedIn = false;
+        this.checkLoggedIn.emit(false);
+      });
   }
 
   linkWorkspace(item) {

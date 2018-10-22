@@ -26,7 +26,8 @@ export module Controllers {
       'create',
       'link',
       'checkLink',
-      'images'
+      'images',
+      'datasets'
     ];
     _config: any;
 
@@ -400,6 +401,44 @@ export module Controllers {
             }
           }).subscribe(response => {
 
+            this.ajaxOk(req, res, null, {status: true, response: response});
+          }, error => {
+            const errorMessage = `Failed to get images of user: ${userId}`;
+            sails.log.error(errorMessage);
+            this.ajaxFail(req, res, errorMessage, error);
+          });
+      }
+    }
+
+    datasets(req, res) {
+      this.config.set();
+      if (!req.isAuthenticated()) {
+        this.ajaxFail(req, res, `User not authenticated`);
+      } else {
+        this.config.brandingAndPortalUrl = BrandingService.getFullPath(req);
+        const userId = req.user.id;
+        const offset = 10;
+        const limit = 10;
+        let app = {};
+        const rdmpId = req.param('rdmpId');
+        const omeroId = req.param('omeroId');
+        //Get app info
+        //Get oid metadata info from oid
+        //From metadata get the omeroId so from that get the projectId to get the datasets ids.
+        //Check that ID is a string not a number (it is a double in mongodb!)
+        return WorkspaceService.workspaceAppFromUserId(userId, this.config.appName)
+          .flatMap(response => {
+            app = response.info;
+            if (response.info) {
+              const app = response.info;
+              return OMEROService.datasets({
+                config: this.config, app: app, omeroId: omeroId, offset: offset, limit: limit,
+                owner: app.userId, group: app.ownerId
+              });
+            } else {
+              throw new Error('Missing application credentials');
+            }
+          }).subscribe(response => {
             this.ajaxOk(req, res, null, {status: true, response: response});
           }, error => {
             const errorMessage = `Failed to get images of user: ${userId}`;

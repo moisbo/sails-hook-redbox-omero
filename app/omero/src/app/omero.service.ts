@@ -114,5 +114,21 @@ export class OMEROService extends BaseService {
       });
   }
 
+  datasets({rdmpId, workspaceId}) {
+    const wsUrl = this.brandingAndPortalUrl + '/ws/omero/datasets';
+    return this.http.post(
+      wsUrl,
+      {rdmpId: rdmpId, workspaceId: workspaceId},
+      this.options
+    )
+      .toPromise()
+      .then((res: any) => {
+        return this.extractData(res);
+      })
+      .catch((res: any) => {
+        return this.extractData(res);
+      });
+  }
+
 
 }

@@ -29,7 +29,8 @@ var Services;
                 'annotations',
                 'getCookies',
                 'getCookieValue',
-                'images'
+                'images',
+                'datasets'
             ];
             return _this_1;
         }
@@ -187,6 +188,21 @@ var Services;
                 }
             });
             return Rx_1.Observable.fromPromise(post);
+        };
+        OMEROService.prototype.datasets = function (_a) {
+            var config = _a.config, app = _a.app, omeroId = _a.omeroId, limit = _a.limit, offset = _a.offset, owner = _a.owner;
+            var jar = requestPromise.jar();
+            jar = this.cookieJar(jar, config, 'csrftoken', app.csrf);
+            jar = this.cookieJar(jar, config, 'sessionid', app.sessionid);
+            var get = requestPromise({
+                uri: config.host + "/api/v0/m/projects/" + omeroId + "/datasets/?limit=" + limit + "&offset=" + offset + "&owner=" + owner,
+                jar: jar,
+                headers: {
+                    'X-CSRFToken': app.csrf,
+                    'sessionUuid': app.sessionUuid
+                }
+            });
+            return Rx_1.Observable.fromPromise(get);
         };
         return OMEROService;
     }(services.Services.Core.Service));

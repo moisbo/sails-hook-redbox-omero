@@ -160,7 +160,16 @@ export class OMEROFormComponent extends LoadableComponent {
         }
         this.loggedIn = false;
         if (form.fieldsMeta) {
-          this.fields = form.fieldsMeta;
+          // Only load forms with specific actions
+          if(this.action !== 'false') {
+            this.fields = form.fieldsMeta.filter((field) => {
+              return field.options.action === this.action || field.options.action === 'general';
+            })
+          } else {
+            this.fields = form.fieldsMeta.filter((field) => {
+              return field.options.action === 'general';
+            })
+          }
           this.rebuildForm();
           this.watchForChanges();
           this.registerEvents();

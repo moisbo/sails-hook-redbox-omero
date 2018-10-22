@@ -96,8 +96,10 @@ export class DetailWorkspaceField extends FieldBase<any> {
     return this.value;
   }
 
-
-
+  listDatasets() {
+    return this.omeroService.datasets({rdmpId: this.rdmp, workspaceId: this.oid})
+      .then(response => {})
+  }
 
 }
 
@@ -108,6 +110,7 @@ export class DetailWorkspaceField extends FieldBase<any> {
   selector: 'ws-detailworkspace',
   template: `<div>
     Detail Workspace for field {{ field.rdmp }} and oid {{ field.oid }}
+    List Dataset, Select Dataset, List Images
   </div>
   `
 })

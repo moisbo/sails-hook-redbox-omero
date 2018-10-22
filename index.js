@@ -60,7 +60,8 @@ module.exports = function (sails) {
         'post /:branding/:portal/ws/omero/login': OMEROController.login,
         'post /:branding/:portal/ws/omero/create': OMEROController.create,
         'post /:branding/:portal/ws/omero/link': OMEROController.link,
-        'post /:branding/:portal/ws/omero/checkLink': OMEROController.checkLink
+        'post /:branding/:portal/ws/omero/checkLink': OMEROController.checkLink,
+        'post /:branding/:portal/ws/omero/datasets': OMEROController.datasets
       }
     },
     configure: function () {

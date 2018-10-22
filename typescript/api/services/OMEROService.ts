@@ -25,7 +25,8 @@ export module Services {
       'annotations',
       'getCookies',
       'getCookieValue',
-      'images'
+      'images',
+      'datasets'
     ];
 
     constructor() {
@@ -203,6 +204,21 @@ export module Services {
         }
       });
       return Observable.fromPromise(post);
+    }
+
+    datasets({config, app, omeroId, limit, offset, owner}) {
+      let jar = requestPromise.jar();
+      jar = this.cookieJar(jar, config, 'csrftoken', app.csrf);
+      jar = this.cookieJar(jar, config, 'sessionid', app.sessionid);
+      const get = requestPromise({
+        uri: `${config.host}/api/v0/m/projects/${omeroId}/datasets/?limit=${limit}&offset=${offset}&owner=${owner}`,
+        jar: jar,
+        headers: {
+          'X-CSRFToken': app.csrf,
+          'sessionUuid': app.sessionUuid
+        }
+      });
+      return Observable.fromPromise(get);
     }
 
 
