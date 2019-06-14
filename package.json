@@ -42,7 +42,7 @@
     "ncp": "^2.0.0",
     "path-exists": "^3.0.0",
     "request": "^2.87.0",
-    "request-promise": "^4.2.2",
+    "request-promise": "^4.2.4",
     "rxjs": "6.3.3",
     "rxjs-compat": "6.3.3",
     "typescript": "^2.8.3"
